@@ -25,18 +25,18 @@ THE SOFTWARE.
   <!--
     This Jelly script is used to produce the global configuration option.
   -->
-  <f:section title="Chef Identity Management">
-    <f:entry title="Chef Identities" description="List of Chef user credentials to talk to Chef servers">
-      <f:repeatable name="chefIdentity" var="identity" items="${descriptor.chefIdentities}" header="Identity">
+  <f:section title="${%Chef Identity Management}">
+    <f:entry title="${%Chef Identities}" description="${%List of Chef user credentials to talk to Chef servers}">
+      <f:repeatable name="chefIdentity" var="identity" items="${descriptor.chefIdentities}" header="${%Identity}">
         <input type="hidden" name="stapler-class" value="io.chef.jenkins.ChefIdentity" />
         <table width="100%">
-          <f:entry title="Identity Name">
+          <f:entry title="${%Identity Name}" description="${%A unique name to identify this Chef Identity}">
             <f:textbox field="idName" value="${identity.idName}"/>
           </f:entry>
-          <f:entry title="client.pem key">
+          <f:entry title="${%user.pem key}" description="${%Will write this to the .chef directory as user.pem file.}">
             <f:textarea field="pemKey" value="${identity.pemKey}"/>
           </f:entry>
-          <f:entry title="Client knife file" description="Put your knife.rb file contents here">
+          <f:entry title="${%knife.rb file}" description="${%MUST HAVE THE LINE &lt;code style='color:red'&gt;client key  './user.pem'&lt;/code&gt;}">
             <f:textarea field="knifeRb" value="${identity.knifeRb}"/>
           </f:entry>
 

@@ -105,7 +105,7 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 			} catch (IOException e) {
 				new FilePath(ws, ".chef").mkdirs();
 				new FilePath(ws, ".chef/.jenkinsChefIdentity").write(chefIdentity.getIdName(), "UTF-8");
-				new FilePath(ws, ".chef/client.pem").write(chefIdentity.getPemKey(), "UTF-8");
+				new FilePath(ws, ".chef/user.pem").write(chefIdentity.getPemKey(), "UTF-8");
 				new FilePath(ws, ".chef/knife.rb").write(chefIdentity.getKnifeRb(), "UTF-8");
 			}
 		}

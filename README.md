@@ -1,6 +1,6 @@
 # Chef Identity Jenkins Plugin
 
-Allows you to use the Jenkins admin to define a client pem key and contents of a knife.rb file and save it as an Identity for communicating with a Chef Server.  Then in any build job, exposes a checkbox to use a Chef Identity.  If checked, select an Identity and a `.chef` folder will be created in the workspace with the pem key and knife.rb files, allowing knife (or possibly other) commands to execute against a Chef server and have the auth credentials needed to execute those commands.
+Allows you to use the Jenkins admin to define a user.pem key and contents of a knife.rb file and save it as an Identity for communicating with a Chef Server.  Then in any build job, exposes a checkbox to use a Chef Identity.  If checked, select an Identity and a `.chef` folder will be created in the workspace with the user.pem key and knife.rb files, allowing knife (or possibly other) commands to execute against a Chef server and have the auth credentials needed to execute those commands.
 
 This DOES NOT install a Chef client on your Jenkins server, that needs to be done separately.
 
@@ -9,12 +9,13 @@ The minimum Jenkins version we're building for is LTS 1.554.3.
 Get your bearings with <https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial>
 
 ## TO DO
-* Officially track these on Waffle.io once in Jenkins repo
-* Localize, localize, localize (and help pages)
+* Officially track these on Waffle.io once in Jenkins repo? Or Jenkin's Jira?
+* Localize
 * Setup FormValidation to remind people key and knife fields aren't optional
-* Button to validate key + knife file on Config screen?  Will require external libraries
+* Ensure the `client_key` has a value of `'./user.pem'` in the knife.rb file
+* -OR- overwrite it for the user to ensure the expected value is there?
+* Button to validate key + knife file on Config screen?  Will require external libraries/tools
 * Use FileCallable for File actions?
-* Ensure client.pem file permissions are 600?
 * Throw Build error if Identity has been removed from the Admin but job still configured for it.
 
 # LICENSE and AUTHOR:

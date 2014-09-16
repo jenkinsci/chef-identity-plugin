@@ -27,7 +27,7 @@ THE SOFTWARE.
 
     See global.jelly for a general discussion about jelly script.
   -->
-    <f:entry title="Chef Identity to use">
+    <f:entry title="${%Chef Identity to use}">
       <select class="setting-input" name="jobIdentity">
         <j:forEach var="s" items="${descriptor.chefIdentities}">
           <f:option selected="${s.idName==instance.jobIdentity}" value="${s.idName}">${s.idName}</f:option>
