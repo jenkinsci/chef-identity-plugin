@@ -70,8 +70,8 @@ THE SOFTWARE.
   </pluginRepositories>
 
   <scm>
-    <connection>scm:git:git@github.com:tfitch/chef-identity-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:tfitch/chef-identity-plugin.git</developerConnection>
+    <connection>scm:git:git@github.com:jenkinsci/chef-identity-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/chef-identity-plugin.git</developerConnection>
   </scm>
 
 </project>
