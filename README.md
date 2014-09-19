@@ -16,7 +16,6 @@ Get your bearings with <https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutor
 * -OR- overwrite it for the user to ensure the expected value is there?
 * Button to validate key + knife file on Config screen?  Will require external libraries/tools
 * Use FileCallable for File actions?
-* Throw Build error if Identity has been removed from the Admin but job still configured for it.
 
 # LICENSE and AUTHOR:
 

@@ -41,6 +41,12 @@ public class ChefIdentity implements Serializable {
 	private final String pemKey;
 	private final String knifeRb;
 
+	public ChefIdentity() {
+		this.idName = null;
+		this.pemKey = null;
+		this.knifeRb = null;
+	}
+
 	@DataBoundConstructor
 	public ChefIdentity(String idName, String pemKey, String knifeRb) {
 		this.idName = idName;

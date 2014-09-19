@@ -82,11 +82,18 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 	public void preCheckout(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
 		// This is where you 'build' the project.
 		listener.getLogger().println("Running build with Chef Identity of " + this.jobIdentity);
+		ChefIdentity chefIdentity = new ChefIdentity();
 
 		// now grab that Identity to write the files 
 		// and stop using the jobIdentity reference because an Identity could be removed from system Config
 		// so we want the lookup of it and fail accordingly
-		ChefIdentity chefIdentity = getDescriptor().getChefIdentity(jobIdentity);
+		// using InterruptedException here because it Aborts the build vs IOException which fails it
+		try {
+			chefIdentity = getDescriptor().getChefIdentity(jobIdentity);
+		} catch (InterruptedException e) {
+			listener.getLogger().println(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
 
 		// Workflow - How to track which identity's files are in the workspace
 		// We'll create a file .chef/jobChefIdentity with the chefIdentity.idName()
@@ -183,17 +190,16 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 			return chefIdentities;
 		}
 
-		public ChefIdentity getChefIdentity(String idName) {
+		public ChefIdentity getChefIdentity(String idName) throws InterruptedException {
 			for(ChefIdentity ident : chefIdentities ) {
 				if(ident != null && ident.getIdName().equals(idName)) {
 					return ident;
 				}
 			}
-			// return an empty ChefIdentity, 
-			// this could only happen in a weird race condition of someone editing identies while jobs are running
-			// or a job is using a deleted identity... 
-			// TODO: Fail a build if this lookup finds nothing
-			return new ChefIdentity("Lookup", "Identity", "Failed");
+			// Aborts the build, 
+			// this can happen in a weird race condition of someone editing identies while jobs are running
+			// or a job is using a deleted identity
+			throw new InterruptedException ("Chef Identity Plugin::Lookup of identity '" + idName + "' failed. Aborting build.");
 		}
 
 		// Required by external plugins (according to Articfactory plugin)
