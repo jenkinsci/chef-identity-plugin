@@ -79,7 +79,7 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 	}
 
 	@Override
-	public void preCheckout(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+	public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
 		// This is where you 'build' the project.
 		listener.getLogger().println("Running build with Chef Identity of " + this.jobIdentity);
 		ChefIdentity chefIdentity = new ChefIdentity();
@@ -116,10 +116,7 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 				new FilePath(ws, ".chef/knife.rb").write(chefIdentity.getKnifeRb(), "UTF-8");
 			}
 		}
-	}
-
-	@Override
-	public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+		
 		return new NoopEnv();
 	}
 
