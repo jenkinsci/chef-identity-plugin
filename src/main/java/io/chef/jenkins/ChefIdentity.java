@@ -23,6 +23,7 @@
 package io.chef.jenkins;
 
 import hudson.util.Scrambler;
+import hudson.util.Secret;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.Serializable;
@@ -38,20 +39,23 @@ public class ChefIdentity implements Serializable {
 	private static final Logger log = Logger.getLogger(ChefIdentity.class.getName());
 
 	private final String idName;
-	private final String pemKey;
-	private final String knifeRb;
+	private Secret pemKey;
+	private Secret knifeRb;
+	private final boolean convertedSecret;
 
 	public ChefIdentity() {
 		this.idName = null;
 		this.pemKey = null;
 		this.knifeRb = null;
+		this.convertedSecret = false;
 	}
 
 	@DataBoundConstructor
 	public ChefIdentity(String idName, String pemKey, String knifeRb) {
 		this.idName = idName;
-		this.pemKey = Scrambler.scramble(pemKey);
-		this.knifeRb = Scrambler.scramble(knifeRb);
+		if (this.pemKey == null) this.pemKey = Secret.fromString(pemKey);
+		if (this.knifeRb == null) this.knifeRb = Secret.fromString(knifeRb);
+		this.convertedSecret = true;
 	}
 
 	public String getIdName() {
@@ -59,10 +63,18 @@ public class ChefIdentity implements Serializable {
 	}
 
 	public String getPemKey() {
-		return Scrambler.descramble(pemKey);
+		if (convertedSecret) {
+			return Secret.toString(pemKey);
+		} else {
+			return Scrambler.descramble(pemKey.getPlainText());
+		}
 	}
 
 	public String getKnifeRb() {
-		return Scrambler.descramble(knifeRb);
+		if (convertedSecret) {
+			return Secret.toString(knifeRb);
+		} else {
+			return Scrambler.descramble(knifeRb.getPlainText());
+		}
 	}
 }
