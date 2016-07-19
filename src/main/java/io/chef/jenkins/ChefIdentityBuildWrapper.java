@@ -117,6 +117,27 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 			}
 		}
 		
+		StringBuilder shellScriptContent = new StringBuilder();
+		// Goto main cookbook
+		shellScriptContent.append("cd " + chefIdentity.getPathCookBook()).append("\n");
+		// Download all cookbook dependencies
+		shellScriptContent.append("berks vendor ../").append("\n");
+		// Go to owner workspace folder
+		shellScriptContent.append("cd ").append(ws.getRemote()).append("\n");
+		// Install knife zero plugin
+		shellScriptContent.append("sudo chef gem install knife-zero").append("\n");
+		// Install chef cookbook to remote host
+		shellScriptContent.append("knife zero bootstrap " + chefIdentity.getRemoteHost()
+			+ " --ssh-user " + chefIdentity.getRemoteAccount()
+			+ " --sudo --identity-file .chef/user.pem --local-mode --run-list '" + chefIdentity.getRunList()
+			+ "' --overwrite").append("\n");
+
+		//Create install-chef-cookbook.sh file if not exist
+		FilePath shellScriptFile = new FilePath(ws, ChefIdentity.SHELL_SCRIPT_FILE);
+		if (!shellScriptFile.exists()) {
+			listener.getLogger().println("Create " + ChefIdentity.SHELL_SCRIPT_FILE + " file in owner workspace");
+			new FilePath(ws, ChefIdentity.SHELL_SCRIPT_FILE).write(shellScriptContent.toString(), "UTF-8");
+		}
 		return new NoopEnv();
 	}
 

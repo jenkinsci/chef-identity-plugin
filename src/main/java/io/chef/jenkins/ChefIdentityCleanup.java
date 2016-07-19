@@ -83,6 +83,10 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
             new FilePath(workspace, ".chef").deleteRecursive();
 
             listener.getLogger().append(".chef folder removed\n");
+
+            new FilePath(workspace, "install-chef-cookbook.sh").deleteRecursive();
+
+            listener.getLogger().append("install-chef-cookbook.sh file removed\n");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             listener.getLogger().append("Cannot delete .chef folder: " + ex.getMessage() + "\n");
