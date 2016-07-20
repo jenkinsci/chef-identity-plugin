@@ -129,7 +129,7 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 		// Install chef cookbook to remote host
 		shellScriptContent.append("knife zero bootstrap " + chefIdentity.getRemoteHost()
 			+ " --ssh-user " + chefIdentity.getRemoteAccount()
-			+ " --sudo --identity-file .chef/user.pem --local-mode --run-list '" + chefIdentity.getRunList()
+			+ " --identity-file .chef/user.pem --run-list '" + chefIdentity.getRunList()
 			+ "' --overwrite").append("\n");
 
 		//Create install-chef-cookbook.sh file if not exist

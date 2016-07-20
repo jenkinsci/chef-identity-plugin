@@ -33,10 +33,11 @@ Go to **Manage Jenkins** -> **Configure System** -> **Chef Identity Management**
 - knife.rb file: Default setting below
 
 ```
-current_dir = File.dirname(__FILE__)
 log_level                :info
 log_location             STDOUT
 cookbook_path            [File.expand_path('../../cookbooks' , __FILE__), File.expand_path('../../site-cookbooks' , __FILE__)]
+local_mode               true
+knife[:use_sudo] = true
 ```
 
 - Path cookbook: Path of cookbook git repository
