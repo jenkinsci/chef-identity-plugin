@@ -39,8 +39,8 @@ THE SOFTWARE.
           <f:entry title="${%knife.rb file}" description="${%MUST HAVE THE LINE &lt;code style='color:red'&gt;client key  './user.pem'&lt;/code&gt;}">
             <f:textarea field="knifeRb" value="${identity.knifeRb}"/>
           </f:entry>
-          <f:entry title="${%Path cookbook}" description="${%Input path of cookbook will be run Ex: site-cookbooks/jenkins_server}">
-            <f:textbox field="pathCookBook" value="${identity.pathCookBook}"/>
+          <f:entry title="${%node.json file}" description="${%Node attributes}">
+            <f:textarea field="nodeJson" value="${identity.nodeJson}"/>
           </f:entry>
           <f:entry title="${%Run list}" description="${%Ex: recipe[apt],recipe[xfs],recipe[vim]}">
             <f:textbox field="runList" value="${identity.runList}"/>
@@ -50,6 +50,9 @@ THE SOFTWARE.
           </f:entry>
           <f:entry title="${%Remote account}" description="${%Remote user}">
             <f:textbox field="remoteAccount" value="${identity.remoteAccount}"/>
+          </f:entry>
+          <f:entry title="${%Remote host client.rb}" description="${%Add more parameter to client.rb in remote host}">
+            <f:textarea field="remoteHostClientRb" value="${identity.remoteHostClientRb}"/>
           </f:entry>
           <f:entry title="">
             <div align="right">
