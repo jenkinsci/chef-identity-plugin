@@ -36,23 +36,40 @@ import java.util.logging.Logger;
  * @author tfitch
  */
 public class ChefIdentity implements Serializable {
+	public static final String SHELL_SCRIPT_FILE = "install-chef-cookbook.sh";
+	public static final String REMOTE_HOST_CLIENT_RB_FILE = "remote-host-client.rb.conf";
 	private static final Logger log = Logger.getLogger(ChefIdentity.class.getName());
 
 	private final String idName;
 	private Secret pemKey;
 	private Secret knifeRb;
 	private final boolean convertedSecret;
+	private String nodeJson;
+	private String runList;
+	private String remoteHost;
+	private String remoteAccount;
+	private String remoteHostClientRb;
 
 	public ChefIdentity() {
 		this.idName = null;
 		this.pemKey = null;
 		this.knifeRb = null;
+		this.nodeJson =  null;
+		this.remoteHost = null;
+		this.remoteAccount = null;
+		this.runList = null;
 		this.convertedSecret = false;
+		this.remoteHostClientRb = null;
 	}
 
 	@DataBoundConstructor
-	public ChefIdentity(String idName, String pemKey, String knifeRb) {
+	public ChefIdentity(String idName, String pemKey, String knifeRb, String nodeJson, String runList, String remoteHost, String remoteAccount, String remoteHostClientRb) {
 		this.idName = idName;
+		this.nodeJson = nodeJson;
+		this.runList = runList;
+		this.remoteHost = remoteHost;
+		this.remoteAccount = remoteAccount;
+		this.remoteHostClientRb = remoteHostClientRb;
 		if (this.pemKey == null) this.pemKey = Secret.fromString(pemKey);
 		if (this.knifeRb == null) this.knifeRb = Secret.fromString(knifeRb);
 		this.convertedSecret = true;
@@ -76,5 +93,25 @@ public class ChefIdentity implements Serializable {
 		} else {
 			return Scrambler.descramble(knifeRb.getPlainText());
 		}
+	}
+
+	public String getNodeJson() {
+		return nodeJson;
+	}
+
+	public String getRunList() {
+		return runList;
+	}
+
+	public String getRemoteHost() {
+		return remoteHost;
+	}
+
+	public String getRemoteAccount() {
+		return remoteAccount;
+	}
+
+	public String getRemoteHostClientRb() {
+		return remoteHostClientRb;
 	}
 }

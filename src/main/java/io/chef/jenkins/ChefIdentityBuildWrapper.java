@@ -35,6 +35,7 @@ import hudson.tasks.BuildWrapper;
 import hudson.remoting.VirtualChannel;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
@@ -117,6 +118,39 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 			}
 		}
 		
+		//Create remote-host-client.rb.conf file if not exist
+		FilePath remoteChefClient = new FilePath(ws, ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE);
+		if (!remoteChefClient.exists()) {
+			listener.getLogger().println("Create " + ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE + " file in owner workspace");
+			new FilePath(ws, ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE).write(chefIdentity.getRemoteHostClientRb(), "UTF-8");
+		}
+
+		//Node attribute json data
+		String nodeJSON = null;
+		try {
+			JSONParser parser = new JSONParser();
+			org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(chefIdentity.getNodeJson());
+			nodeJSON = jsonObject.toString();
+		} catch (Exception e) {
+			throw new IOException("node.json data wrong format");
+		}
+
+		StringBuilder shellScriptContent = new StringBuilder();
+		// Install knife zero plugin
+		shellScriptContent.append("chef gem install knife-zero").append("\n");
+		// Install chef cookbook to remote host
+		shellScriptContent.append("knife zero bootstrap " + chefIdentity.getRemoteHost()
+			+ " --ssh-user " + chefIdentity.getRemoteAccount()
+			+ " --json-attributes '" + nodeJSON + "'"
+			+ " --identity-file .chef/user.pem --run-list '" + chefIdentity.getRunList()
+			+ "' --appendix-config " + ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE + " --overwrite").append("\n");
+
+		//Create install-chef-cookbook.sh file if not exist
+		FilePath shellScriptFile = new FilePath(ws, ChefIdentity.SHELL_SCRIPT_FILE);
+		if (!shellScriptFile.exists()) {
+			listener.getLogger().println("Create " + ChefIdentity.SHELL_SCRIPT_FILE + " file in owner workspace");
+			new FilePath(ws, ChefIdentity.SHELL_SCRIPT_FILE).write(shellScriptContent.toString(), "UTF-8");
+		}
 		return new NoopEnv();
 	}
 

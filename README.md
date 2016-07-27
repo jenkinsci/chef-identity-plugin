@@ -8,6 +8,46 @@ This DOES NOT install a Chef client on your Jenkins server, that needs to be don
 The minimum Jenkins version we're building for is LTS 1.554.3.
 Get your bearings with <https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial>
 
+## Install plugin
+
+**Step 1**: Build .hpi file
+
+```
+mvn clean -DskipTest package
+```
+
+**Step 2**: In jenkins server
+
+- Go to **Manage Jenkins** -> **Manage Plugins** -> **Advanced** -> **Upload Plugin**
+
+- Select file chef-identity.hpi and upload to jenkins server
+
+## Chef Identity Setting
+
+Go to **Manage Jenkins** -> **Configure System** -> **Chef Identity Management**
+
+- Identity Name
+
+- user.pem key: Key pair download from AWS
+
+- knife.rb file: Default setting below
+
+```
+log_level                :info
+log_location             STDOUT
+cookbook_path            [File.expand_path('../../cookbooks' , __FILE__), File.expand_path('../../site-cookbooks' , __FILE__)]
+local_mode               true
+knife[:use_sudo] = true
+```
+
+- Path cookbook: Path of cookbook git repository
+
+- Run list
+
+- Remote host
+
+- Remote account: In AWS, Ubuntu OS default account is ubuntu, Amazone OS default is ec2-user.
+
 ## TO DO
 * Officially track these on Waffle.io once in Jenkins repo? Or Jenkin's Jira?
 * Localize
