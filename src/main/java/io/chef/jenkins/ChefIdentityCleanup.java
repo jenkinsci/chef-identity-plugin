@@ -84,9 +84,13 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
 
             listener.getLogger().append(".chef folder removed\n");
 
-            new FilePath(workspace, "install-chef-cookbook.sh").deleteRecursive();
+            new FilePath(workspace, ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE).deleteRecursive();
 
-            listener.getLogger().append("install-chef-cookbook.sh file removed\n");
+            listener.getLogger().append(ChefIdentity.REMOTE_HOST_CLIENT_RB_FILE + " file removed\n");
+
+            new FilePath(workspace, ChefIdentity.SHELL_SCRIPT_FILE).deleteRecursive();
+
+            listener.getLogger().append(ChefIdentity.SHELL_SCRIPT_FILE + " file removed\n");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             listener.getLogger().append("Cannot delete .chef folder: " + ex.getMessage() + "\n");
@@ -96,7 +100,6 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
         return true;
     }
 
-    @Override
     public MatrixAggregator createAggregator(final MatrixBuild matrixBuild, Launcher launcher, final BuildListener buildListener) {
         return new MatrixAggregator(matrixBuild, launcher, buildListener) {
             @Override
@@ -106,7 +109,6 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
         };
     }
 
-    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
