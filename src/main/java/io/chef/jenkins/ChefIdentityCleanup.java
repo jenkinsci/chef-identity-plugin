@@ -33,17 +33,20 @@ import hudson.matrix.MatrixConfiguration;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Job;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+import jenkins.tasks.SimpleBuildWrapper;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.json.JSONObject;
 
 /**
  * Modeled after the Workspace Cleanup plugin, but just for the .chef folder
@@ -74,8 +77,11 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
     }
 
     public boolean _perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        return cleanup(build.getWorkspace(), listener);
+    }
+
+    private boolean cleanup(FilePath workspace, TaskListener listener) throws AbortException {
         listener.getLogger().append("\nChef Identity cleanup happening... \n");
-        FilePath workspace = build.getWorkspace();
         try {
             if (workspace == null || !workspace.exists()) {
                 return true;
@@ -153,4 +159,10 @@ public class ChefIdentityCleanup extends Notifier implements MatrixAggregatable 
         }
     }
 
+    public static final class WrapperDisposerImpl extends SimpleBuildWrapper.Disposer {
+        public void tearDown(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+            ChefIdentityCleanup cleanup = new ChefIdentityCleanup(null);
+            cleanup.cleanup(workspace,listener);
+        }
+    }
 }

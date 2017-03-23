@@ -8,6 +8,18 @@ This DOES NOT install a Chef client on your Jenkins server, that needs to be don
 The minimum Jenkins version we're building for is LTS 1.554.3.
 Get your bearings with <https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial>
 
+## Pipeline Builds
+To use an Identity in a Pipeline build use the
+[`wrap` step](https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#code-wrap-code-general-build-wrapper).
+
+```groovy
+node {
+    wrap([$class: 'ChefIdentityBuildWrapper', jobIdentity: 'my-chef']) {
+        sh 'knife node list -c .chef/knife.rb'
+    }
+}
+```
+
 ## TO DO
 * Officially track these on Waffle.io once in Jenkins repo? Or Jenkin's Jira?
 * Localize
