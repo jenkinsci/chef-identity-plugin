@@ -22,30 +22,25 @@
  */
 package io.chef.jenkins;
 
-import hudson.FilePath;
-import hudson.FilePath.FileCallable;
-import hudson.Launcher;
+import hudson.EnvVars;
 import hudson.Extension;
-import hudson.util.FormValidation;
-import hudson.model.AbstractBuild;
+import hudson.FilePath;
+import hudson.Launcher;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Descriptor;
-import hudson.tasks.BuildWrapper;
-import hudson.remoting.VirtualChannel;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildWrapperDescriptor;
+import jenkins.tasks.SimpleBuildWrapper;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Sample {@link BuildWrapper}.
+ * Sample {@link SimpleBuildWrapper}.
  *
  * <p>
  * When the user configures the project and enables this builder,
@@ -56,12 +51,12 @@ import java.util.List;
  * to remember the configuration.
  *
  * <p>
- * When a build is performed, the {@link #preCheckout(AbstractBuild, Launcher, BuildListener)}
+ * When a build is performed, the {@link #setUp(Context, Run, FilePath, Launcher, TaskListener, EnvVars)}
  * method will be invoked. 
  *
  * @author tfitch
  */
-public class ChefIdentityBuildWrapper extends BuildWrapper {
+public class ChefIdentityBuildWrapper extends SimpleBuildWrapper {
 
 	private final String jobIdentity;
 
@@ -79,10 +74,11 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 	}
 
 	@Override
-	public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+	public void setUp(Context context, Run<?, ?> build, FilePath ws, Launcher launcher, TaskListener listener, EnvVars initialEnvironment) throws IOException, InterruptedException {
 		// This is where you 'build' the project.
 		listener.getLogger().println("Running build with Chef Identity of " + this.jobIdentity);
-		ChefIdentity chefIdentity = new ChefIdentity();
+		context.setDisposer(new ChefIdentityCleanup.WrapperDisposerImpl());
+		ChefIdentity chefIdentity;
 
 		// now grab that Identity to write the files 
 		// and stop using the jobIdentity reference because an Identity could be removed from system Config
@@ -101,7 +97,6 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 		// Fails to read (doesn't exist then write the files).
 		// The chefIdentity.getIdName() name doesn't match then overwrite the files.
 		// Finally if chefIdentity.getIdName() matches then we're golden and do nothing.
-		FilePath ws = build.getWorkspace();
 		if (ws != null) {
 			try {
                 if (!(new FilePath(ws, ".chef/.jenkinsChefIdentity")).readToString().equals(chefIdentity.getIdName())) {
@@ -116,8 +111,6 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 				new FilePath(ws, ".chef/knife.rb").write(chefIdentity.getKnifeRb(), "UTF-8");
 			}
 		}
-		
-		return new NoopEnv();
 	}
 
 	// Overridden for better type safety.
@@ -137,7 +130,7 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 	 * for the actual HTML fragment for the configuration screen.
 	 */
 	@Extension // This indicates to Jenkins that this is an implementation of an extension point.
-	public static final class DescriptorImpl extends Descriptor<BuildWrapper> {
+	public static final class DescriptorImpl extends BuildWrapperDescriptor {
 		/**
 		 * To persist global configuration information,
 		 * simply store it in a field and call save().
@@ -156,8 +149,9 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 			load();
 		}
 
-		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-			// Indicates that this builder can be used with all kinds of project types 
+		@Override
+		public boolean isApplicable(AbstractProject<?, ?> item) {
+			// Indicates that this builder can be used with all kinds of project types
 			return true;
 		}
 
@@ -204,9 +198,6 @@ public class ChefIdentityBuildWrapper extends BuildWrapper {
 		public void setChefIdentities(List<ChefIdentity> chefIdentities) {
 			this.chefIdentities = chefIdentities;
 		}
-	}
-
-	class NoopEnv extends Environment{
 	}
 }
 
