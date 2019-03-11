@@ -27,7 +27,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.609</version><!-- which version of Jenkins is this plugin built against? Users must have at least this Jenkins version to use this plugin. -->
+    <version>3.4</version>
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
@@ -37,6 +37,11 @@ THE SOFTWARE.
   <name>Chef Identity Plugin</name>
   <description>Allows management of Chef credentials so jobs can execute jobs against a Chef server using those credentials</description>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/chef-identity+plugin</url>
+
+  <properties>
+    <jenkins.version>2.7.3</jenkins.version>
+    <java.level>8</java.level>
+  </properties>
 
   <developers>
     <developer>
