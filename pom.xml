@@ -31,12 +31,12 @@ THE SOFTWARE.
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
-  <artifactId>chef-identity</artifactId>
+  <artifactId>cinc-identity</artifactId>
   <version>2.0.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
-  <name>Chef Identity Plugin</name>
-  <description>Allows management of Chef credentials so jobs can execute jobs against a Chef server using those credentials</description>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/chef-identity+plugin</url>
+  <name>Cinc Identity Plugin</name>
+  <description>Allows management of Cinc credentials so jobs can execute jobs against a Cinc server using those credentials</description>
+  <url>http://wiki.jenkins-ci.org/display/JENKINS/cinc-identity+plugin</url>
 
   <properties>
     <jenkins.version>2.7.3</jenkins.version>
@@ -83,9 +83,9 @@ THE SOFTWARE.
   </pluginRepositories>
 
   <scm>
-    <connection>scm:git:git@github.com:jenkinsci/chef-identity-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/chef-identity-plugin.git</developerConnection>
-    <tag>chef-identity-2.0.0</tag>
+    <connection>scm:git:git@github.com:jenkinsci/cinc-identity-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/cinc-identity-plugin.git</developerConnection>
+    <tag>cinc-identity-2.0.0</tag>
   </scm>
 
   <build>

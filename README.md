@@ -1,8 +1,8 @@
-# Chef Identity Jenkins Plugin
+# Cinc Identity Jenkins Plugin
 
-Allows you to use the Jenkins admin to define a user.pem key and contents of a knife.rb file and save it as an Identity for communicating with a Chef Server.  Then in any build job, exposes a checkbox to use a Chef Identity.  If checked, select an Identity and a `.chef` folder will be created in the workspace with the user.pem key and knife.rb files, allowing knife (or possibly other) commands to execute against a Chef server and have the auth credentials needed to execute those commands.
+Allows you to use the Jenkins admin to define a user.pem key and contents of a knife.rb file and save it as an Identity for communicating with a Cinc Server.  Then in any build job, exposes a checkbox to use a Cinc Identity.  If checked, select an Identity and a `.cinc` folder will be created in the workspace with the user.pem key and knife.rb files, allowing knife (or possibly other) commands to execute against a Cinc server and have the auth credentials needed to execute those commands.
 
-This DOES NOT install a Chef client on your Jenkins server, that needs to be done separately.
+This DOES NOT install a Cinc client on your Jenkins server, that needs to be done separately.
 
 ## REQUIREMENTS:
 The minimum Jenkins version we're building for is LTS 1.554.3.
@@ -14,8 +14,8 @@ To use an Identity in a Pipeline build use the
 
 ```groovy
 node {
-    wrap([$class: 'ChefIdentityBuildWrapper', jobIdentity: 'my-chef']) {
-        sh 'knife node list -c .chef/knife.rb'
+    wrap([$class: 'CincIdentityBuildWrapper', jobIdentity: 'my-cinc']) {
+        sh 'knife node list -c .cinc/knife.rb'
     }
 }
 ```
@@ -31,7 +31,7 @@ node {
 
 # LICENSE and AUTHOR:
 
-Author:: Tyler Fitch <tfitch@getchef.com>
+Author:: Tyler Fitch <tfitch@getcinc.com>
 
 The MIT License (MIT)
 

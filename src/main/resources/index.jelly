@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-  This plugin manages user credentials for a <a href="http://getchef.com" target="_new">Chef</a> server.
+  This plugin manages user credentials for a Cinc server.
 </div>

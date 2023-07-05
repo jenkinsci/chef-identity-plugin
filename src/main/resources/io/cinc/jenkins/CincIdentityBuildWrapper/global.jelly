@@ -1,0 +1,53 @@
+<!--
+The MIT License (MIT)
+
+Copyright (c) 2014 Tyler Fitch
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<?jelly escape-by-default='true'?>
+ <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This Jelly script is used to produce the global configuration option.
+  -->
+  <f:section title="${%Cinc Identity Management}">
+    <f:entry title="${%Cinc Identities}" description="${%List of Cinc user credentials to talk to Cinc servers}">
+      <f:repeatable name="cincIdentity" var="identity" items="${descriptor.cincIdentities}" header="${%Identity}">
+        <input type="hidden" name="stapler-class" value="io.cinc.jenkins.CincIdentity" />
+        <table width="100%">
+          <f:entry title="${%Identity Name}" description="${%A unique name to identify this Cinc Identity}">
+            <f:textbox field="idName" value="${identity.idName}"/>
+          </f:entry>
+          <f:entry title="${%user.pem key}" description="${%Will write this to the .cinc directory as user.pem file.}">
+            <f:textarea field="pemKey" value="${identity.pemKey}"/>
+          </f:entry>
+          <f:entry title="${%knife.rb file}" description="${%MUST HAVE THE LINE &lt;code style='color:red'&gt;client key  './user.pem'&lt;/code&gt;}">
+            <f:textarea field="knifeRb" value="${identity.knifeRb}"/>
+          </f:entry>
+
+          <f:entry title="">
+            <div align="right">
+              <f:repeatableDeleteButton />
+            </div>
+          </f:entry>
+        </table>
+      </f:repeatable>
+    </f:entry>
+  </f:section>
+</j:jelly>
